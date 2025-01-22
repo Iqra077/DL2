@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Recommender System</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/scripts.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>📚 Student Recommender System</h1>
+  </header>
+  <main>
+    <section class="search-section">
+      <h2>Get Study Recommendations</h2>
+      <form id="recommendationForm">
+        <label for="studentId">Enter Student ID:</label>
+        <input type="text" id="studentId" name="studentId" placeholder="E.g., S12345" required />
+        <button type="submit">Get Recommendations</button>
+      </form>
+    </section>
+
+    <section id="resultSection" class="hidden">
+      <h2>Recommendations</h2>
+      <div id="recommendationContainer" class="recommendation-container"></div>
+    </section>
+
+    <div id="loader" class="hidden">
+      <div class="spinner"></div>
+    </div>
+  </main>
+  <footer>
+    <p>© 2025 Student Recommender System | Built with ❤️</p>
+  </footer>
+</body>
+</html>
