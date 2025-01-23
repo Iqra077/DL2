@@ -88,21 +88,20 @@ for student_id, performance_level in zip(student_avg_performance['Student_ID'], 
     weak_topics = student_topics[student_topics['Score'] < 0.4]['Topic']
     
     if performance_level == 'Weak':
+        # Recommend more resources for weak students
         resources = resource_data[resource_data['Topic'].isin(le_topic.inverse_transform(weak_topics))]
-        # Recommend 6-7 resources per topic
-        resources = resources.groupby('Topic').apply(lambda x: x.sample(n=min(len(x), 7), random_state=42)).reset_index(drop=True)
-    elif performance_level == 'Average':
-        resources = resource_data[resource_data['Topic'].isin(le_topic.inverse_transform(student_topics['Topic']))]
-        # Recommend 5-6 resources per topic
         resources = resources.groupby('Topic').apply(lambda x: x.sample(n=min(len(x), 6), random_state=42)).reset_index(drop=True)
-    else:  # Good
+    elif performance_level == 'Average':
+        # Recommend a moderate number of resources for average students
         resources = resource_data[resource_data['Topic'].isin(le_topic.inverse_transform(student_topics['Topic']))]
-        # Recommend 2-3 resources per topic
+        resources = resources.groupby('Topic').apply(lambda x: x.sample(n=min(len(x), 5), random_state=42)).reset_index(drop=True)
+    else:  # Good
+        # Recommend fewer resources for good students
+        resources = resource_data[resource_data['Topic'].isin(le_topic.inverse_transform(student_topics['Topic']))]
         resources = resources.groupby('Topic').apply(lambda x: x.sample(n=min(len(x), 3), random_state=42)).reset_index(drop=True)
     
     # Include Resource_ID and other necessary fields in recommendations
     recommendations[le_student.inverse_transform([student_id])[0]] = resources[['Resource_ID', 'Type', 'Platform', 'Resource_Link']].to_dict('records')
-
 # Flask App for Frontend
 app = Flask(__name__)
 
@@ -113,14 +112,27 @@ def index():
 @app.route('/recommendations', methods=['GET'])
 def get_recommendations():
     student_id = request.args.get('student_id')
-    if student_id in recommendations:
-        return jsonify({
-            'student_id': student_id,
-            'performance_level': student_avg_performance[student_avg_performance['Student_ID'] == le_student.transform([student_id])[0]]['Performance_Level'].values[0],
-            'recommendations': recommendations[student_id]
-        })
-    else:
-        return jsonify({'error': 'Student not found'})
+    try:
+        # Transform the student_id to match the encoded version
+        encoded_student_id = le_student.transform([student_id])[0]
+        
+        # Check if the student exists in the data
+        if encoded_student_id in student_avg_performance['Student_ID'].values:
+            performance_level = student_avg_performance[student_avg_performance['Student_ID'] == encoded_student_id]['Performance_Level'].values[0]
+            average_score = student_avg_performance[student_avg_performance['Student_ID'] == encoded_student_id]['Score'].values[0]
+            
+            return jsonify({
+                'student_id': student_id,
+                'average_score': round(average_score, 2),
+                'performance_level': performance_level,
+                'recommendations': recommendations[student_id]
+            })
+        else:
+            return jsonify({'error': 'Student not found'})
+    except Exception as e:
+        logging.error(f"Error: {e}")
+        return jsonify({'error': 'An error occurred while processing the request'})
+
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080) 
+    app.run(debug=True, port = 5005) 
