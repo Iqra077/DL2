@@ -70,23 +70,24 @@ This project aims to develop a **Student Performance-Based Recommender System** 
 1. **Clone the Repository**:
    bash
    git clone https://github.com/iqra077/StudentPerformance_Based_RecommenderSystem.git
+   
    cd StudentPerformance_Based_RecommenderSystem
    
 
-2. **Install Dependencies**:
+3. **Install Dependencies**:
    pip install -r requirements.txt
 
-3. **Prepare Data**:
+4. **Prepare Data**:
    - Place the required datasets in the project directory:
      - "student_performance_data.csv"
      - "study_resources_data.csv"
 
-4. **Run the Application**:
+5. **Run the Application**:
    bash
    python test2.py
    
 
-5. **Access the Application**:
+6. **Access the Application**:
    - Open your browser and visit: `http://127.0.0.1:5005
 
 
