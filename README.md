@@ -95,14 +95,20 @@ This project aims to develop a **Student Performance-Based Recommender System** 
 
 .
 ├── test2.py                   # Flask application
+
 ├── student_performance_data.csv
+
 ├── study_resources_data.csv
+
 ├── templates
 │   └── index.html           # Frontend HTML
+
 ├── static
 │   ├── styles.css           # CSS for frontend
 │   └── scripts.js           # JavaScript for interactivity
+
 ├── requirements.txt         # Python dependencies
+
 └── README.md                # Project documentation
 
 
